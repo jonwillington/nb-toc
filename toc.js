@@ -67,6 +67,8 @@
     return Promise.resolve();
   }
 
+  /* Rendered inside the collapsible panel, so on mobile it appears only once
+   * the contents are expanded. */
   function buildShare() {
     var url = shareUrl();
     var title = shareTitle();
@@ -188,13 +190,18 @@
 
     var list = document.createElement('ul');
     list.className = 'nb-toc__list';
-    list.id = 'nb-toc-list';
+
+    /* List and share collapse as one unit on mobile, so the disclosure
+     * controls a panel wrapping both rather than the list alone. */
+    var panel = document.createElement('div');
+    panel.className = 'nb-toc__panel';
+    panel.id = 'nb-toc-panel';
 
     var toggle = document.createElement('button');
     toggle.className = 'nb-toc__toggle';
     toggle.type = 'button';
     toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-controls', list.id);
+    toggle.setAttribute('aria-controls', panel.id);
     toggle.innerHTML =
       '<span class="nb-toc__title"></span><span class="nb-toc__chevron"></span>';
     toggle.firstChild.textContent = TITLE;
@@ -217,32 +224,32 @@
       return link;
     });
 
+    panel.appendChild(list);
+    panel.appendChild(buildShare());
+
     inner.appendChild(toggle);
     inner.appendChild(staticTitle);
-    inner.appendChild(list);
-    /* Sits outside the collapsible list so sharing stays reachable on mobile
-     * without expanding the contents first. */
-    inner.appendChild(buildShare());
+    inner.appendChild(panel);
     nav.appendChild(inner);
 
-    return { nav: nav, list: list, toggle: toggle, links: links };
+    return { nav: nav, panel: panel, toggle: toggle, links: links };
   }
 
-  /* Mobile only: on desktop toc.css forces the list visible and hides the
+  /* Mobile only: on desktop toc.css forces the panel visible and hides the
    * button, so the collapsed state must not survive a resize back up. */
-  function wireToggle(toggle, list) {
+  function wireToggle(toggle, panel) {
     var mobile = window.matchMedia('(max-width: 1023px)');
 
     function apply() {
       var collapsed = mobile.matches;
-      list.hidden = collapsed;
+      panel.hidden = collapsed;
       toggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
     }
 
     toggle.addEventListener('click', function () {
       var open = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', open ? 'false' : 'true');
-      list.hidden = open;
+      panel.hidden = open;
     });
 
     if (mobile.addEventListener) {
@@ -344,7 +351,7 @@
     container.classList.add('nb-toc-layout');
 
     syncHeaderOffset();
-    wireToggle(toc.toggle, toc.list);
+    wireToggle(toc.toggle, toc.panel);
     wireSpy(headings, toc.links);
     wireClicks(toc.links);
   }

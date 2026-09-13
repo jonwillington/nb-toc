@@ -43,6 +43,10 @@
   font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 18px;
+  /* The site's global button reset sets text-transform: uppercase, which
+   * inherits into the toggle's label, so state it here rather than relying on
+   * the cascade. */
+  text-transform: none;
   transition: color 240ms var(--nb-toc-ease);
 }
 
@@ -84,6 +88,7 @@
 
 .nb-toc__title--static {
   display: none;
+  margin-bottom: 16px;
 }
 
 .nb-toc__list {
@@ -92,8 +97,9 @@
   padding: 0;
 }
 
-/* Collapsed by default on mobile; the desktop media query forces it open. */
-.nb-toc__list[hidden] {
+/* Collapsed by default on mobile; the desktop media query forces it open.
+ * Covers the contents list and the share row together. */
+.nb-toc__panel[hidden] {
   display: none;
 }
 
@@ -142,11 +148,15 @@
   padding-top: 16px;
 }
 
+.nb-share__title {
+  margin-bottom: 16px;
+}
+
 .nb-share__list {
   display: flex;
   gap: 8px;
   list-style: none;
-  margin: 12px 0 0;
+  margin: 0;
   padding: 0;
 }
 
@@ -236,6 +246,10 @@
 
   .nb-toc__title--static {
     display: block;
+  }
+
+  .nb-toc__list {
+    margin-top: 0;
   }
 
   .nb-toc__link {

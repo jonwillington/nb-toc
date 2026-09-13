@@ -78,9 +78,9 @@ copy-link button, as 34px icon buttons. It sits inside the sticky wrapper, so
 it travels with the TOC.
 
 **Mobile (< 1024px).** The grid collapses and the TOC becomes a disclosure
-above the article, closed by default, with the sticky behaviour off. The share
-row sits outside the collapsible list, so sharing stays reachable without
-expanding the contents first.
+above the article, closed by default, with the sticky behaviour off. The
+contents list and the share row collapse together, so the disclosure controls
+a panel wrapping both rather than the list alone.
 
 ### How it works
 
@@ -109,6 +109,10 @@ expanding the contents first.
 - Share icons are inline SVG paths drawn in `currentColor`, so they inherit the
   link colours. The footer's own social icons are white-on-dark PNGs and would
   be invisible against the article background.
+- The site's global `button` reset sets `text-transform: uppercase` (along with
+  a dark background, white text and its own font), which inherits into the
+  disclosure's label. `toc.css` states `text-transform: none` on the heading
+  rather than relying on the cascade.
 - Copy-link uses the async Clipboard API with a `execCommand` fallback for
   non-secure origins, and confirms via an `aria-live` status that clears after
   two seconds.
