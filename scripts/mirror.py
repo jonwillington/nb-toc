@@ -128,6 +128,12 @@ def localise(html: str) -> str:
     return html
 
 
+# The table-of-contents feature lives in its own files so rebuilding the mirror
+# never clobbers it; these tags are injected into the freshly fetched markup.
+FEATURE_CSS = '<link rel="stylesheet" href="toc.css">'
+FEATURE_JS = '<script src="toc.js" defer></script>'
+
+
 # AOS reveals scroll-animated blocks by adding .aos-animate from JS that ships
 # inside the Gatsby bundle we strip, so pin those blocks to their revealed
 # state - otherwise "Recent articles" stays at opacity 0 forever.
@@ -162,7 +168,8 @@ def main() -> int:
         f"{args.source} - see README.md. Built by scripts/mirror.py. -->",
         1,
     )
-    html = html.replace("</head>", STATIC_OVERRIDES + "</head>", 1)
+    html = html.replace("</head>", STATIC_OVERRIDES + FEATURE_CSS + "</head>", 1)
+    html = html.replace("</body>", FEATURE_JS + "</body>", 1)
     (ROOT / "index.html").write_text(html, encoding="utf-8")
     print(f"Wrote index.html ({len(html) // 1024} KB)")
     return 0

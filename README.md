@@ -48,7 +48,61 @@ server sends:
 All page CSS is inlined by Gatsby in the source, so there is no separate
 stylesheet to mirror.
 
-## Adding the TOC
+## The table of contents
 
-Article sections are the `<h2>` elements inside `.entry-content`. They carry no
-`id` attributes in the source, so anchors need generating.
+The feature lives in two files that sit alongside the mirror rather than inside
+it, so `mirror.py` can refetch the page without clobbering the work:
+
+```
+toc.css   layout and styling
+toc.js    builds the list, scroll-spy, smooth scrolling
+```
+
+`mirror.py` injects the `<link>` and `<script>` tags into every rebuild.
+
+### Behaviour
+
+**Desktop (>= 1024px).** The post container becomes a two-column grid: a 260px
+TOC on the left and the article on the right, with a 64px gap. At the 1200px
+container this narrows the article from 1140px to 816px and shifts it right.
+The TOC is sticky and stays in view while the article scrolls, with the current
+section highlighted.
+
+The article title and hero image still span the full container width - only the
+body text is indented. To shift the title and hero right as well, drop the
+`grid-column: 1 / -1` rule on `.nb-toc-layout .intro-section` in `toc.css` and
+they will fall into the article column.
+
+**Mobile (< 1024px).** The grid collapses and the TOC becomes a disclosure
+above the article, closed by default, with the sticky behaviour off.
+
+### How it works
+
+- Headings come from `.blog-page .article-body h2` - eight sections in the
+  current post. They carry no `id` in the source, so `toc.js` slugifies each
+  title (`Microsoft Foundry` becomes `#microsoft-foundry`) and de-duplicates
+  collisions.
+- The site header is `position: fixed`, so its height is measured at runtime
+  into `--nb-toc-header-offset`. That one variable drives both the sticky
+  offset and the headings' `scroll-margin-top`, so anchor jumps land clear of
+  the header instead of underneath it.
+- Scroll-spy runs off a rAF-throttled passive scroll listener, marking the
+  active link with `aria-current="true"`. At the bottom of the page the last
+  section is pinned active, since a short final section never clears the
+  offset on its own.
+- `position: sticky` is on an inner wrapper, not the grid item: the item
+  stretches to the row height, which is what gives the sticky element room to
+  travel.
+- Clicks scroll smoothly (honouring `prefers-reduced-motion`) and update the
+  hash with `replaceState`, avoiding a history entry per section.
+
+### Tuning
+
+The knobs are custom properties at the top of `toc.css`:
+
+| Property | Default | Controls |
+|---|---|---|
+| `--nb-toc-width` | `260px` | TOC column width |
+| `--nb-toc-gap` | `64px` | Space between TOC and article |
+| `--nb-toc-gutter` | `24px` | Gap below the header when pinned |
+| `--nb-toc-header-offset` | measured | Fixed-header height (set by `toc.js`) |

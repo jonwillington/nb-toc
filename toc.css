@@ -1,0 +1,197 @@
+/* Table of contents
+ *
+ * Layered on top of the mirrored Nimble Learn article: on desktop the post
+ * container becomes a two-column grid with a sticky TOC on the left and a
+ * narrower article column on the right; below 1024px the TOC collapses into a
+ * disclosure above the article. Injected by scripts/mirror.py, so a rebuild of
+ * index.html keeps the feature.
+ */
+
+:root {
+  /* Measured from the fixed .header-holder at runtime by toc.js. */
+  --nb-toc-header-offset: 64px;
+  --nb-toc-width: 260px;
+  --nb-toc-gap: 64px;
+  --nb-toc-gutter: 24px;
+
+  --nb-toc-ink: #080808;
+  --nb-toc-muted: #717171;
+  --nb-toc-accent: #3272b8;
+  --nb-toc-rule: hsla(0, 0%, 44%, 0.14);
+  --nb-toc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Headings are scroll targets, so keep them clear of the fixed site header. */
+.blog-page .article-body h2[id] {
+  scroll-margin-top: calc(var(--nb-toc-header-offset) + var(--nb-toc-gutter));
+}
+
+.nb-toc {
+  margin-bottom: 40px;
+  width: 100%;
+}
+
+.nb-toc__inner {
+  border: 1px solid var(--nb-toc-rule);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.nb-toc__title {
+  color: var(--nb-toc-muted);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 18px;
+  text-transform: uppercase;
+  transition: color 240ms var(--nb-toc-ease);
+}
+
+/* The disclosure button is the mobile affordance; the plain title replaces it
+ * on desktop, where the list is always open and a button would be a no-op. */
+.nb-toc__toggle {
+  align-items: center;
+  background: none;
+  border: 0;
+  color: var(--nb-toc-muted);
+  cursor: pointer;
+  display: flex;
+  font-family: inherit;
+  justify-content: space-between;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.nb-toc__toggle:hover .nb-toc__title,
+.nb-toc__toggle:focus-visible .nb-toc__title {
+  color: var(--nb-toc-ink);
+}
+
+.nb-toc__chevron {
+  border-bottom: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  height: 8px;
+  margin-left: 12px;
+  transform: rotate(45deg);
+  transform-origin: center;
+  transition: transform 240ms var(--nb-toc-ease);
+  width: 8px;
+}
+
+.nb-toc__toggle[aria-expanded="true"] .nb-toc__chevron {
+  transform: rotate(-135deg);
+}
+
+.nb-toc__title--static {
+  display: none;
+}
+
+.nb-toc__list {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+}
+
+/* Collapsed by default on mobile; the desktop media query forces it open. */
+.nb-toc__list[hidden] {
+  display: none;
+}
+
+.nb-toc__item {
+  margin: 0;
+  padding: 0;
+}
+
+.nb-toc__link {
+  border-left: 2px solid transparent;
+  color: var(--nb-toc-muted);
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 22px;
+  padding: 8px 0 8px 14px;
+  text-decoration: none;
+  transition:
+    color 240ms var(--nb-toc-ease),
+    border-color 240ms var(--nb-toc-ease),
+    box-shadow 240ms var(--nb-toc-ease);
+}
+
+.nb-toc__link:hover,
+.nb-toc__link:focus-visible {
+  color: var(--nb-toc-ink);
+}
+
+.nb-toc__link:focus {
+  outline: none;
+}
+
+.nb-toc__link[aria-current="true"] {
+  border-left-color: var(--nb-toc-accent);
+  color: var(--nb-toc-accent);
+}
+
+@media only screen and (min-width: 1024px) {
+  /* .blog-page .post is a centred column flex container in the source styles;
+   * the extra classes here out-specify it without touching the mirror. */
+  .blog-page .inner-container.post.nb-toc-layout {
+    align-items: stretch;
+    column-gap: var(--nb-toc-gap);
+    display: grid;
+    grid-template-columns: var(--nb-toc-width) minmax(0, 1fr);
+  }
+
+  /* Title and hero stay full width; only the body text shifts right. */
+  .nb-toc-layout .intro-section {
+    grid-column: 1 / -1;
+  }
+
+  .nb-toc-layout .nb-toc {
+    grid-column: 1;
+    margin-bottom: 0;
+  }
+
+  .nb-toc-layout .article-body {
+    grid-column: 2;
+  }
+
+  /* Sticky lives on the inner wrapper: the grid item itself stretches to the
+   * row height, which is what gives the sticky element room to travel. */
+  .nb-toc__inner {
+    border: 0;
+    border-left: 1px solid var(--nb-toc-rule);
+    border-radius: 0;
+    max-height: calc(100vh - var(--nb-toc-header-offset) - var(--nb-toc-gutter) * 2);
+    overflow-y: auto;
+    padding: 0 0 0 20px;
+    position: sticky;
+    top: calc(var(--nb-toc-header-offset) + var(--nb-toc-gutter));
+  }
+
+  .nb-toc__toggle {
+    display: none;
+  }
+
+  .nb-toc__title--static {
+    display: block;
+  }
+
+  .nb-toc__link {
+    border-left: 0;
+    margin-left: -21px;
+    padding-left: 20px;
+  }
+
+  .nb-toc__link[aria-current="true"] {
+    box-shadow: inset 2px 0 0 0 var(--nb-toc-accent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nb-toc__chevron,
+  .nb-toc__link {
+    transition: none;
+  }
+}
