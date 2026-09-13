@@ -38,12 +38,11 @@
 }
 
 .nb-toc__title {
-  color: var(--nb-toc-muted);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  color: var(--nb-toc-ink);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   line-height: 18px;
-  text-transform: uppercase;
   transition: color 240ms var(--nb-toc-ease);
 }
 
