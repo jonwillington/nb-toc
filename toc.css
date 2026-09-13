@@ -192,15 +192,18 @@
   display: block;
 }
 
+/* The live region still announces "Link copied", but it reserved a 16px band
+ * under the icons whether or not it held a message. Taken out of the layout
+ * entirely; sighted confirmation is the button's tick and accent state. */
 .nb-share__status {
-  color: var(--nb-toc-accent);
-  display: block;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  line-height: 16px;
-  min-height: 16px;
-  margin-top: 8px;
+  border: 0;
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }
 
 @media only screen and (min-width: 1024px) {

@@ -114,8 +114,11 @@ a panel wrapping both rather than the list alone.
   disclosure's label. `toc.css` states `text-transform: none` on the heading
   rather than relying on the cascade.
 - Copy-link uses the async Clipboard API with a `execCommand` fallback for
-  non-secure origins, and confirms via an `aria-live` status that clears after
-  two seconds.
+  non-secure origins. It confirms by swapping the icon to a tick and holding
+  the accent state for two seconds. The `aria-live` status carrying the
+  announcement is visually hidden: on screen it only reserved an empty band
+  under the icons, and taking it out of the layout also means the copy
+  feedback causes no layout shift.
 
 ### Tuning
 

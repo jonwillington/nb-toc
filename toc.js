@@ -21,6 +21,8 @@
       'M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z',
     email:
       'M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z',
+    check:
+      'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z',
     link:
       'M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z'
   };
@@ -134,10 +136,13 @@
     copy.addEventListener('click', function () {
       copyText(url);
       copy.classList.add('is-copied');
+      copy.innerHTML = icon('check');
+      /* The status is visually hidden, so it only carries the announcement. */
       status.textContent = 'Link copied';
       window.clearTimeout(reset);
       reset = window.setTimeout(function () {
         copy.classList.remove('is-copied');
+        copy.innerHTML = icon('link');
         status.textContent = '';
       }, 2000);
     });
