@@ -131,7 +131,7 @@ def localise(html: str) -> str:
 # AOS reveals scroll-animated blocks by adding .aos-animate from JS that ships
 # inside the Gatsby bundle we strip, so pin those blocks to their revealed
 # state - otherwise "Recent articles" stays at opacity 0 forever.
-STATIC_OVERRIDES = """<style id="nl-toc-static-overrides">
+STATIC_OVERRIDES = """<style id="nb-toc-static-overrides">
 [data-aos] {
   opacity: 1 !important;
   transform: none !important;

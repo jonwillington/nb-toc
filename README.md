@@ -1,4 +1,4 @@
-# nl-toc
+# nb-toc
 
 A static copy of the Nimble Learn blog post
 [Recent News in Analytics and AI: June 2026 Edition](https://www.nimblelearn.com/blog/recent-news-in-analytics-and-ai-june-2026/),
@@ -38,7 +38,7 @@ server sends:
   are restored on whatever survives.
 - **AOS scroll animations are pinned open.** The "Recent articles" block is
   revealed by AOS from the stripped bundle, so a small override in
-  `<style id="nl-toc-static-overrides">` holds `[data-aos]` blocks visible.
+  `<style id="nb-toc-static-overrides">` holds `[data-aos]` blocks visible.
 - **Asset URLs are rewritten** from `/static/...` to `assets/static/...` so the
   page works from a project subpath on GitHub Pages.
 - **Site navigation points back at the live site** — links like `/about/`
