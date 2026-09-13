@@ -73,8 +73,14 @@ body text is indented. To shift the title and hero right as well, drop the
 `grid-column: 1 / -1` rule on `.nb-toc-layout .intro-section` in `toc.css` and
 they will fall into the article column.
 
+Beneath the contents list is a **Share via** row - LinkedIn, X, email and a
+copy-link button, as 34px icon buttons. It sits inside the sticky wrapper, so
+it travels with the TOC.
+
 **Mobile (< 1024px).** The grid collapses and the TOC becomes a disclosure
-above the article, closed by default, with the sticky behaviour off.
+above the article, closed by default, with the sticky behaviour off. The share
+row sits outside the collapsible list, so sharing stays reachable without
+expanding the contents first.
 
 ### How it works
 
@@ -95,6 +101,17 @@ above the article, closed by default, with the sticky behaviour off.
   travel.
 - Clicks scroll smoothly (honouring `prefers-reduced-motion`) and update the
   hash with `replaceState`, avoiding a history entry per section.
+- Share links point at the **canonical article**, not at wherever this copy is
+  served from. The source page ships no canonical tag, so `mirror.py` stamps
+  one in pointing at the original post, and `toc.js` reads it (falling back to
+  `location.href`). To share the prototype URL instead, drop the canonical
+  injection in `mirror.py`.
+- Share icons are inline SVG paths drawn in `currentColor`, so they inherit the
+  link colours. The footer's own social icons are white-on-dark PNGs and would
+  be invisible against the article background.
+- Copy-link uses the async Clipboard API with a `execCommand` fallback for
+  non-secure origins, and confirms via an `aria-live` status that clears after
+  two seconds.
 
 ### Tuning
 

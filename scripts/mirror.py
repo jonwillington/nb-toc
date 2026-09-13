@@ -134,6 +134,16 @@ FEATURE_CSS = '<link rel="stylesheet" href="toc.css">'
 FEATURE_JS = '<script src="toc.js" defer></script>'
 
 
+def canonical_tag(source: str) -> str:
+    """Point at the original article.
+
+    The source page ships no canonical link. Adding one is right for a mirror
+    on a different host, and it gives the share buttons the real article URL
+    instead of wherever this copy is being served from.
+    """
+    return f'<link rel="canonical" href="{source}">'
+
+
 # AOS reveals scroll-animated blocks by adding .aos-animate from JS that ships
 # inside the Gatsby bundle we strip, so pin those blocks to their revealed
 # state - otherwise "Recent articles" stays at opacity 0 forever.
@@ -168,7 +178,11 @@ def main() -> int:
         f"{args.source} - see README.md. Built by scripts/mirror.py. -->",
         1,
     )
-    html = html.replace("</head>", STATIC_OVERRIDES + FEATURE_CSS + "</head>", 1)
+    html = html.replace(
+        "</head>",
+        STATIC_OVERRIDES + canonical_tag(args.source) + FEATURE_CSS + "</head>",
+        1,
+    )
     html = html.replace("</body>", FEATURE_JS + "</body>", 1)
     (ROOT / "index.html").write_text(html, encoding="utf-8")
     print(f"Wrote index.html ({len(html) // 1024} KB)")

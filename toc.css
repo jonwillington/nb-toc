@@ -133,6 +133,67 @@
   color: var(--nb-toc-accent);
 }
 
+/* Share via
+ * Sits below the contents list, inside the sticky wrapper so it travels with
+ * the TOC, and outside the collapsible list so it stays visible on mobile.
+ */
+.nb-share {
+  border-top: 1px solid var(--nb-toc-rule);
+  margin-top: 20px;
+  padding-top: 16px;
+}
+
+.nb-share__list {
+  display: flex;
+  gap: 8px;
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.nb-share__link {
+  align-items: center;
+  background: none;
+  border: 1px solid var(--nb-toc-rule);
+  border-radius: 50%;
+  color: var(--nb-toc-muted);
+  cursor: pointer;
+  display: flex;
+  height: 34px;
+  justify-content: center;
+  padding: 0;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  width: 34px;
+}
+
+.nb-share__link:hover,
+.nb-share__link:focus-visible {
+  background-color: rgba(50, 114, 184, 0.1);
+  border-color: transparent;
+  color: var(--nb-toc-accent);
+}
+
+.nb-share__copy.is-copied {
+  background-color: rgba(50, 114, 184, 0.1);
+  border-color: transparent;
+  color: var(--nb-toc-accent);
+}
+
+.nb-share__icon {
+  display: block;
+}
+
+.nb-share__status {
+  color: var(--nb-toc-accent);
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 16px;
+  min-height: 16px;
+  margin-top: 8px;
+}
+
 @media only screen and (min-width: 1024px) {
   /* .blog-page .post is a centred column flex container in the source styles;
    * the extra classes here out-specify it without touching the mirror. */
@@ -187,11 +248,16 @@
   .nb-toc__link[aria-current="true"] {
     box-shadow: inset 2px 0 0 0 var(--nb-toc-accent);
   }
+
+  .nb-share {
+    margin-top: 24px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .nb-toc__chevron,
-  .nb-toc__link {
+  .nb-toc__link,
+  .nb-share__link {
     transition: none;
   }
 }
